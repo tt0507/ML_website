@@ -1,13 +1,20 @@
-from app import app
-from flask import render_template, url_for, redirect
+from flask import Blueprint, render_template
+from flask import current_app as app
+
+# blueprint configuration
+home_bp = Blueprint(
+    'home_bp', __name__,
+    template_folder='templates',
+    static_folder='static'
+)
 
 
-@app.route('/')
+@home_bp.route('/', methods=['GET'])
 def index():
     return render_template('index.html', title='Website', header="Machine Learning Projects")
 
 
-@app.route('/project')
+@home_bp.route('/project', methods=['GET'])
 def project():
     finance = [
         {
@@ -17,8 +24,3 @@ def project():
         }
     ]
     return render_template('project.html', title='Projects', header="Project List", finance=finance)
-
-
-@app.route('/project/time_forecast')
-def project_time_forecast():
-    return render_template('project/time_forecast.html')
