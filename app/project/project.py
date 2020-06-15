@@ -1,8 +1,6 @@
 from flask import Blueprint, render_template
 import app.web_scraping as web_scraping
 import pandas as pd
-from flask_mysqldb import MySQL
-from app import db
 
 project_bp = Blueprint(
     'project_bp', __name__,
