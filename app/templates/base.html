@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
 
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
   <!-- Bootstrap CSS -->
   <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" rel="stylesheet">
@@ -24,6 +24,13 @@
 <main>
   {% block content %}{% endblock %}
 </main>
+
+<div class="footer">
+  <footer class="card-footer">
+    <p>Toshihiro Tokuyama</p>
+    <p>email: tt426@cornell.edu</p>
+  </footer>
+</div>
 <!--<script src="{{ url_for('static', filename='scripts.js') }}"></script>-->
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
