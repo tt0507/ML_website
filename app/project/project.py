@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template
-from flask import current_app as app
+import app.web_scraping as web_scraping
+import pandas as pd
 
 project_bp = Blueprint(
     'project_bp', __name__,
@@ -10,4 +11,6 @@ project_bp = Blueprint(
 
 @project_bp.route('/project/time_forecast')
 def time_forecast():
-    return render_template('time_forecast.html')
+    # stock_data = web_scraping.get_stock_price()
+    stock_data = [[0, 0], [1, 1], [2, 2]]
+    return render_template('time_forecast.html', stock_data=stock_data)
