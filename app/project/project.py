@@ -5,6 +5,7 @@ from flask import Blueprint, render_template
 from sqlalchemy import create_engine
 
 from app.data.stock_data import process
+from app.model.time_series import run_time_series
 
 project_bp = Blueprint(
     'project_bp', __name__,
@@ -32,6 +33,8 @@ def time_forecast():
     dji_json = jsonify_data(header, dji_data)
     sp500_json = jsonify_data(header, sp500_data)
     nasdaq_json = jsonify_data(header, nasdaq_data)
+
+    run_time_series(dji_json, sp500_json, nasdaq_json)
 
     return render_template('time_forecast.html', dji_json=dji_json, sp500_json=sp500_json, nasdaq_json=nasdaq_json)
 
