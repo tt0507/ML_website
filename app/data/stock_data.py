@@ -60,7 +60,7 @@ def process():
 
 def change_date_format(df):
     """
-
+    change format of date
     :param df: dataframe in which date column wants to be modified
     :return: array of date in string format
     """
@@ -74,9 +74,9 @@ def change_date_format(df):
 
 def insert_data(df, command):
     """
-
-    :param df:
-    :param command:
+    execute mysql command on df
+    :param df: dataframe
+    :param command: sql command to be executed
     :return:
     """
     for num in range(len(df)):
