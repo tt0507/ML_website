@@ -67,10 +67,13 @@ def get_stock_price():
 
             # convert array into dataframe
             df = pd.DataFrame(all_price, columns=['Date', 'Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume'])
-            df = df.set_index('Date')
             dataframe_list.append(df)
 
     finally:
         driver.quit()
 
     return dataframe_list
+
+
+if __name__ == '__main__':
+    get_stock_price()
