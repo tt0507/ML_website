@@ -9,10 +9,6 @@ from app.web_scraping.stock_ws import get_stock_price
 # load environment variables
 load_dotenv()
 
-# import app/web_scraping/stock_ws
-# sys.path.append('/Users/toshihirotokuyama/Desktop/Essential/Programming/data_science/ML_website')
-# from app.web_scraping.stock_ws import get_stock_price
-
 url = os.environ.get("MYSQL_URL")
 database = create_engine(url)
 mysql = database.connect()
