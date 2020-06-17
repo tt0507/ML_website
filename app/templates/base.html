@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
-
+  <script src="https://d3js.org/d3.v5.min.js"></script>
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
   <!-- Bootstrap CSS -->
   <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -34,6 +34,7 @@
 <!--<script src="{{ url_for('static', filename='scripts.js') }}"></script>-->
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+{% block script %}{% endblock %}
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>
