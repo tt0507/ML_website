@@ -34,9 +34,11 @@ def time_forecast():
     sp500_json = jsonify_data(header, sp500_data)
     nasdaq_json = jsonify_data(header, nasdaq_data)
 
-    run_time_series(dji_json, sp500_json, nasdaq_json)
+    dji_predict_json, sp500_predict_json, nasdaq_predict_json = run_time_series(dji_json, sp500_json, nasdaq_json)
 
-    return render_template('time_forecast.html', dji_json=dji_json, sp500_json=sp500_json, nasdaq_json=nasdaq_json)
+    return render_template('time_forecast.html', dji_json=dji_json, sp500_json=sp500_json, nasdaq_json=nasdaq_json,
+                           dji_predict_json=dji_predict_json, sp500_predict_json=sp500_predict_json,
+                           nasdaq_predict_json=nasdaq_predict_json)
 
 
 def jsonify_data(header, data):

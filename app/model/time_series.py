@@ -1,12 +1,11 @@
-import pandas as pd
-import tensorflow as tf
-from tensorflow import keras
-import matplotlib.pyplot as plt
-import numpy as np
-from sklearn.preprocessing import StandardScaler
 import json
-from pandas.io.json import json_normalize
 from pathlib import Path
+
+import numpy as np
+import tensorflow as tf
+from pandas.io.json import json_normalize
+from sklearn.preprocessing import StandardScaler
+from tensorflow import keras
 
 
 def run_time_series(data1, data2, data3):
@@ -52,20 +51,26 @@ def run_time_series(data1, data2, data3):
     assert sp500_label.shape == (len(sp500_standarized) - 20,)
     assert nasdaq_label.shape == (len(nasdaq_standarized) - 20,)
 
-    dji_model_file = Path("app/model/saved_model/dji_model.h5")
-    if dji_model_file.is_file():
-        predict_dji = dji_data[-10:]
-        dji_model = keras.models.load_model("app/model/saved_model/dji_model.h5")
-        predicted_value = dji_model.predict(predict_dji)
-    else:
-        predicted_value = predict_next_prices(dji_data, dji_label, "app/model/saved_model/dji_model.h5",
-                                              predict_num=10)
-    assert predicted_value.shape == (10, 1)
+    # run model and get predicted value
+    dji_predict_stan = run_model("app/model/saved_model/dji_model.h5", dji_data, dji_label, 10)
+    sp500_predict_stan = run_model("app/model/saved_model/sp500_model.h5", sp500_data, sp500_label, 10)
+    nasdaq_predict_stan = run_model("app/model/saved_model/nasdaq_model.h5", nasdaq_data, nasdaq_label, 10)
+
+    # get unstandarized version of predicted value
+    dji_predict = unstandarize(dji_predict_stan, dji['adj_close'])
+    sp500_predict = unstandarize(sp500_predict_stan, sp500['adj_close'])
+    nasdaq_predict = unstandarize(nasdaq_predict_stan, nasdaq['adj_close'])
+
+    dji_predict_json = json.dumps(dict(zip(list(range(len(dji_predict))), dji_predict.tolist())))
+    sp500_predict_json = json.dumps(dict(zip(list(range(len(sp500_predict))), sp500_predict.tolist())))
+    nasdaq_predict_json = json.dumps(dict(zip(list(range(len(nasdaq_predict))), nasdaq_predict.tolist())))
+
+    return dji_predict_json, sp500_predict_json, nasdaq_predict_json
 
 
 def train_data(dataset, target_index, start_index):
     """
-
+    split data in 3D array of shape (len(dataset), start_index, # of columns)
     :param dataset: dataset to partition data
     :param target_index: column which to predict
     :param start_index: index to split the data to fit RNN input shape
@@ -114,6 +119,41 @@ def predict_next_prices(train, label, model_path, predict_num):
     predict = model.predict(predict_data)
 
     return predict
+
+
+def run_model(path, data, label, predict_length):
+    """
+    Run RNN model
+    :param path: path to .h5 model file
+    :param data: train data
+    :param label: target data
+    :param predict_length: amount of days to predict
+    :return: predicted value for predict_length days
+    """
+    model_file = Path(path)
+    if model_file.is_file():
+        predict_dji = data[-predict_length:]
+        model = keras.models.load_model(path)
+        predicted_value = model.predict(predict_dji)
+    else:
+        predicted_value = predict_next_prices(data, label, path,
+                                              predict_num=predict_length)
+    assert predicted_value.shape == (predict_length, 1)
+
+    return predicted_value
+
+
+def unstandarize(predict, target_data):
+    """
+    unstandarize the predict column which represents a Z-score value
+    :param predict:
+    :param target_data:
+    :return:
+    """
+    mean = target_data.mean()
+    std = target_data.std()
+    unstandarized_arr = predict * std + mean
+    return unstandarized_arr
 
 
 if __name__ == "__main__":
