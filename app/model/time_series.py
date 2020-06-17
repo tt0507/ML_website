@@ -52,11 +52,15 @@ def run_time_series(data1, data2, data3):
     assert sp500_label.shape == (len(sp500_standarized) - 20,)
     assert nasdaq_label.shape == (len(nasdaq_standarized) - 20,)
 
-    dji_model_file = Path("/app/model/saved_model/dji_model.h5")
+    dji_model_file = Path("app/model/saved_model/dji_model.h5")
     if dji_model_file.is_file():
-        print(True)
+        predict_dji = dji_data[-10:]
+        dji_model = keras.models.load_model("app/model/saved_model/dji_model.h5")
+        predicted_value = dji_model.predict(predict_dji)
     else:
-        print(False)
+        predicted_value = predict_next_prices(dji_data, dji_label, "app/model/saved_model/dji_model.h5",
+                                              predict_num=10)
+    assert predicted_value.shape == (10, 1)
 
 
 def train_data(dataset, target_index, start_index):
@@ -82,13 +86,13 @@ def train_data(dataset, target_index, start_index):
     return np.array(data), np.array(labels)
 
 
-def predict_next_prices(train, label, model, predict_num):
+def predict_next_prices(train, label, model_path, predict_num):
     """
     Train RNN model on training data and label data
+    :param model_path:
     :param predict_num:
     :param train: train data
     :param label: label data
-    :param model: path to save model
     :return:
     """
     model = keras.models.Sequential([
@@ -100,9 +104,10 @@ def predict_next_prices(train, label, model, predict_num):
 
     # fit model
     callback = keras.callbacks.EarlyStopping(patience=10, restore_best_weights=True)
-    checkpoint_cb = keras.callbacks.ModelCheckpoint(model, save_best_only=True)
+    checkpoint_cb = keras.callbacks.ModelCheckpoint(model_path, save_best_only=True)
     model.compile(optimizer=tf.keras.optimizers.RMSprop(), loss='mae')
     model.fit(train, label, epochs=100, callbacks=[callback, checkpoint_cb])
+    model.save(model_path)
 
     # predict data
     predict_data = train[-predict_num:]
