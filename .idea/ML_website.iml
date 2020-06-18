@@ -8,5 +8,6 @@
     <orderEntry type="library" name="jquery-3.3.1.slim" level="application" />
     <orderEntry type="library" name="popper.js" level="application" />
     <orderEntry type="library" name="d3.v5" level="application" />
+    <orderEntry type="library" name="underscore.js" level="application" />
   </component>
 </module>

@@ -8,6 +8,7 @@
   <!-- Bootstrap CSS -->
   <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" rel="stylesheet">
+  <script type="module" src="{{ url_for('static', filename='scripts.js') }}"></script>
   <title>{{title}}</title>
 </head>
 <body>
@@ -31,10 +32,9 @@
     <p>email: tt426@cornell.edu</p>
   </footer>
 </div>
-<!--<script src="{{ url_for('static', filename='scripts.js') }}"></script>-->
+{% block script %}{% endblock %}
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-{% block script %}{% endblock %}
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>
