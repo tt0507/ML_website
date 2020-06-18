@@ -11,3 +11,8 @@
 .box {
     box-sizing: content-box;
 }
+
+.center_flex {
+    display: flex;
+    justify-content: center;
+}
