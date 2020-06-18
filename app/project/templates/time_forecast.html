@@ -3,8 +3,44 @@
 {% block content %}
 <h3 class="pl-4">Time series forecasting</h3>
 <p class="pl-4">Dow Jones Industrial Average, S&P 500, and NASDAQ Composite</p>
+<div id="time_series"></div>
 
 <script>
-
+    let dji = {
+    {
+        dji_json | safe
+    }
+    }
+    ;
+    let sp500 = {
+    {
+        sp500_json | safe
+    }
+    }
+    ;
+    let nasdaq = {
+    {
+        nasdaq_json | safe
+    }
+    }
+    ;
+    let dji_predict = {
+    {
+        dji_predict_json | safe
+    }
+    }
+    ;
+    let sp500_predict = {
+    {
+        sp500_predict_json | safe
+    }
+    }
+    ;
+    let nasdaq_predict = {
+    {
+        nasdaq_predict_json | safe
+    }
+    }
+    ;
 </script>
 {% endblock %}
