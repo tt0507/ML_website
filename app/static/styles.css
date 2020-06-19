@@ -16,3 +16,8 @@
     display: flex;
     justify-content: center;
 }
+
+.dji {
+    fill: none;
+    stroke: #ed3700;
+}
