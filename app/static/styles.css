@@ -19,5 +19,10 @@
 
 .dji {
     fill: none;
-    stroke: #ed3700;
+    stroke: darkblue;
+}
+
+.dji_predict {
+    fill: none;
+    stroke: skyblue;
 }
