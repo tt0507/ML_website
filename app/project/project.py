@@ -57,3 +57,8 @@ def jsonify_data(header, data):
             header[5]: row[5], header[6]: row[6]
         })
     return json.dumps(json_data)
+
+
+@project_bp.route('/project/rs_cosine')
+def rs_cosine():
+    return render_template('rs_cosine.html')

@@ -2,17 +2,16 @@
 
 {% block content %}
 <h1 class="pl-4">{{header}}</h1>
-<h2 class="pl-4">Finance</h2>
 
 <div class="container-fluid">
-  <div class="flex">
-    {% for project in finance %}
-    <div class="card" style="width: 18rem;">
+  <div class="project">
+    {% for project in project_list %}
+    <div class="card" style="width: 18rem; margin-right: 20px;">
       <!--  <img class="card-img-top" src="..." alt="Card image cap">-->
       <div class="card-body">
         <h5 class="card-title">{{project.title}}</h5>
         <p class="card-text">{{project.description}}</p>
-        <a href="{{url_for('project_bp.time_forecast')}}" class="btn btn-primary">See Project</a>
+        <a href="{{project.link}}" class="btn btn-primary">See Project</a>
       </div>
     </div>
     {% endfor %}

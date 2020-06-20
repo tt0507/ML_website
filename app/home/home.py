@@ -16,11 +16,16 @@ def index():
 
 @home_bp.route('/project', methods=['GET'])
 def project():
-    finance = [
+    project_list = [
         {
             'title': 'Time Series Forecasting',
             'description': 'Time series forecasting for Dow Jones Industrial Average, S&P 500, and NASDAQ Composite',
             'link': '/project/time_forecast'
+        },
+        {
+            'title': 'Recommendation System',
+            'description': 'Recommendation system for movies based on cosine similarity',
+            'link': 'project/rs_cosine'
         }
     ]
-    return render_template('project.html', title='Projects', header="Project List", finance=finance)
+    return render_template('project.html', title='Projects', header="Project List", project_list=project_list)
