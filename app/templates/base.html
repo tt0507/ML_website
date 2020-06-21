@@ -20,12 +20,14 @@
     <li class="nav-item">
       <a class="nav-link nav_color" href="{{ url_for('home_bp.project') }}">Projects</a>
     </li>
+    <li class="nav-item">
+      <a class="nav-link nav_color" href="{{ url_for('home_bp.about') }}">About Me</a>
+    </li>
   </ul>
 </nav>
 <main>
   {% block content %}{% endblock %}
 </main>
-
 {% block script %}{% endblock %}
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->

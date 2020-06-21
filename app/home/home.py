@@ -29,3 +29,8 @@ def project():
         }
     ]
     return render_template('project.html', title='Projects', header="Project List", project_list=project_list)
+
+
+@home_bp.route('/about', methods=['GET'])
+def about():
+    return render_template('about.html')
