@@ -63,7 +63,10 @@ def jsonify_data(header, data):
 
 @project_bp.route('/project/rs_cosine', methods=['GET', 'POST'])
 def rs_cosine():
+    movie_list = []
     form = RecommendationForm()
     if request.method == "POST":
-        movie_id = request.form["movie_id"]
-    return render_template('rs_cosine.html', form=form)
+        movie_id = int(request.form["movie_id"])
+        recommendation = get_recommendation(movie_id).values
+        movie_list = list(enumerate(recommendation))
+    return render_template('rs_cosine.html', form=form, movie_list=movie_list)
