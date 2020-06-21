@@ -1,12 +1,13 @@
 import json
 import os
 
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request
 from sqlalchemy import create_engine
 
 from app.data.stock_data import process
 from app.model.time_series import run_time_series
 from app.project.forms import RecommendationForm
+from app.model.recommendation_cosine import get_recommendation
 
 project_bp = Blueprint(
     'project_bp', __name__,
@@ -60,7 +61,9 @@ def jsonify_data(header, data):
     return json.dumps(json_data)
 
 
-@project_bp.route('/project/rs_cosine', methods=['GET'])
+@project_bp.route('/project/rs_cosine', methods=['GET', 'POST'])
 def rs_cosine():
     form = RecommendationForm()
+    if request.method == "POST":
+        movie_id = request.form["movie_id"]
     return render_template('rs_cosine.html', form=form)
