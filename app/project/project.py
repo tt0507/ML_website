@@ -6,6 +6,7 @@ from sqlalchemy import create_engine
 
 from app.data.stock_data import process
 from app.model.time_series import run_time_series
+from app.project.forms import RecommendationForm
 
 project_bp = Blueprint(
     'project_bp', __name__,
@@ -59,6 +60,7 @@ def jsonify_data(header, data):
     return json.dumps(json_data)
 
 
-@project_bp.route('/project/rs_cosine')
+@project_bp.route('/project/rs_cosine', methods=['GET'])
 def rs_cosine():
-    return render_template('rs_cosine.html')
+    form = RecommendationForm()
+    return render_template('rs_cosine.html', form=form)

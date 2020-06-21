@@ -1,4 +1,4 @@
-.project{
+.project {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -32,4 +32,21 @@
 .dji_predict {
     fill: none;
     stroke: skyblue;
+}
+
+input[type="submit"] {
+    padding: 10px 13px;
+    width: inherit;
+    background: #5eb9d7;
+    color: white;
+    border-radius: 2px;
+    font-weight: 400;
+    border: 1px solid #5eb9d7;
+    transition: all .3s ease-out;
+}
+
+input[type="submit"]:hover {
+    cursor: pointer;
+    background: white;
+    color: #5eb9d7;
 }
