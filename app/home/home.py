@@ -26,6 +26,11 @@ def project():
             'title': 'Recommendation System',
             'description': 'Recommendation system for movies based on cosine similarity',
             'link': 'project/rs_cosine'
+        },
+        {
+            'title': 'Japan Deflation',
+            'description': 'Examining Japan\'s deflation from 2001 to 2019',
+            'link': 'project/japan_deflation'
         }
     ]
     return render_template('project.html', title='Projects', header="Project List", project_list=project_list)

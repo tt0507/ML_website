@@ -70,3 +70,8 @@ def rs_cosine():
         recommendation = get_recommendation(movie_id).values
         movie_list = list(enumerate(recommendation))
     return render_template('rs_cosine.html', form=form, movie_list=movie_list)
+
+
+@project_bp.route('/project/japan_deflation', methods=['GET'])
+def japan_deflation():
+    return render_template("deflation_analysis_final.html")
