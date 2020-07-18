@@ -3,3 +3,4 @@ env
 .flaskenv
 .bash_profile
 .env
+.DS_Store
