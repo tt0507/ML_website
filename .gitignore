@@ -4,4 +4,4 @@ env
 .bash_profile
 .env
 .DS_Store
-/service_account_key.json
+/my_service_account_private_key.json

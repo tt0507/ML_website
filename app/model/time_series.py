@@ -2,7 +2,11 @@ import googleapiclient.discovery
 import json
 import os
 import numpy as np
+from dotenv import load_dotenv
 from sqlalchemy import create_engine
+
+# load env variable
+load_dotenv()
 
 
 def predict_next_prices():
@@ -10,6 +14,7 @@ def predict_next_prices():
     Predict time series using Google Cloud Platform
     :return: predicted values
     """
+    os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
     project_id = "tidal-eon-283914"
 
     # dji model
@@ -52,7 +57,7 @@ def predict(X, resource, model_path):
 
     input_data_json = {
         "signature_name": "serving_default",
-        "instances": X.tolist()
+        "instances": [X.tolist()]
     }
 
     request = resource.predict(name=model_path, body=input_data_json)
@@ -62,49 +67,36 @@ def predict(X, resource, model_path):
         raise RuntimeError(response["error"])
 
     # TODO: check for loop for returning prediction
-    return np.array([pred for pred in response["prediction"]])
+    return np.array([pred for pred in response["predictions"]])
 
 
 def get_data():
     """
-
+    Get the data used for prediction
     :return:
     """
+
     url = os.environ.get("MYSQL_URL")
     database = create_engine(url)
     mysql = database.connect()
     mysql.execute("use ml_website_database")
 
     # get last 10 value from database
-    dji_data = mysql.execute("SELECT * FROM dow_jones_industrial").fetchall()
-    sp500_data = mysql.execute("SELECT * FROM sp500").fetchall()
-    nasdaq_data = mysql.execute("SELECT * FROM nasdaq").fetchall()
+    dji_data = mysql.execute(
+        "SELECT * FROM ( SELECT * FROM ml_website_database.dow_jones_industrial ORDER BY date DESC LIMIT 10) sub "
+        "ORDER BY date ").fetchall()
+    sp500_data = mysql.execute(
+        "SELECT * FROM ( SELECT * FROM ml_website_database.sp500 ORDER BY date DESC LIMIT 10) sub "
+        "ORDER BY date ").fetchall()
+    nasdaq_data = mysql.execute(
+        "SELECT * FROM ( SELECT * FROM ml_website_database.nasdaq ORDER BY date DESC LIMIT 10) sub "
+        "ORDER BY date ").fetchall()
 
-    header = ("date", "open", "high", "low", "close", "adj_close", "volume")
-    dji_json = jsonify_data(header, dji_data)
-    sp500_json = jsonify_data(header, sp500_data)
-    nasdaq_json = jsonify_data(header, nasdaq_data)
+    dji_numpy = np.array(dji_data)[:, 1:]
+    sp500_numpy = np.array(sp500_data)[:, 1:]
+    nasdaq_numpy = np.array(nasdaq_data)[:, 1:]
 
-    # TODO: change data into numpy array
-
-    return dji_json, sp500_json, nasdaq_json
-
-
-def jsonify_data(header, data):
-    """
-    Turn mysql data into json format
-    :param header: header of database
-    :param data: data of database
-    :return: return json version of data
-    """
-    json_data = []
-
-    for row in data:
-        json_data.append({
-            header[0]: str(row[0]), header[1]: row[1], header[2]: row[2], header[3]: row[3], header[4]: row[4],
-            header[5]: row[5], header[6]: row[6]
-        })
-    return json.dumps(json_data)
+    return dji_numpy, sp500_numpy, nasdaq_numpy
 
 
 def get_visualization_data():
