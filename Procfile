@@ -1,1 +1,1 @@
-web: gunicorn website:ML_website
+web: gunicorn __init__:app
