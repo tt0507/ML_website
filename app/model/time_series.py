@@ -81,7 +81,6 @@ def predict(X, resource, model_path):
     if "error" in response:
         raise RuntimeError(response["error"])
 
-    # TODO: check for loop for returning prediction
     return np.array([pred for pred in response["predictions"]])
 
 
