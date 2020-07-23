@@ -55,7 +55,11 @@ def predict_next_prices():
     sp500_unstandarize = unstandardized(sp500_predict, 'sp500')
     nasdaq_unstandarize = unstandardized(nasdaq_predict, 'nasdaq')
 
-    return dji_predict, sp500_predict, nasdaq_predict
+    dji = [price['dense_1'] for price in dji_unstandarize]
+    sp500 = [price['dense_2'] for price in sp500_unstandarize]
+    nasdaq = [price['dense_3'] for price in nasdaq_unstandarize]
+
+    return dji, sp500, nasdaq
 
 
 def predict(X, resource, model_path):
@@ -204,4 +208,4 @@ def jsonify_data(header, data):
 
 if __name__ == "__main__":
     predict_next_prices()
-    get_visualization_data()
+    # get_visualization_data()
