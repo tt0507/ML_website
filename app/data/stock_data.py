@@ -24,38 +24,35 @@ def process():
     insert stock price into mysql server
     :return:
     """
-    if len(dji) <= 1200 and len(sp500) <= 1200 and len(nasdaq) <= 1200:
-        mysql.execute("DELETE FROM ml_website_database.dow_jones_industrial")
-        mysql.execute("DELETE FROM ml_website_database.sp500")
-        mysql.execute("DELETE FROM ml_website_database.nasdaq")
+    mysql.execute("DELETE FROM ml_website_database.dow_jones_industrial")
+    mysql.execute("DELETE FROM ml_website_database.sp500")
+    mysql.execute("DELETE FROM ml_website_database.nasdaq")
 
-        # get data
-        data = get_stock_price()
-        dji_df = data[0]
-        sp500_df = data[1]
-        nasdaq_df = data[2]
+    # get data
+    data = get_stock_price()
+    dji_df = data[0]
+    sp500_df = data[1]
+    nasdaq_df = data[2]
 
-        # sort data by descending
-        dji_df = dji_df.sort_index(ascending=False)
-        sp500_df = sp500_df.sort_index(ascending=False)
-        nasdaq_df = nasdaq_df.sort_index(ascending=False)
+    # sort data by descending
+    dji_df = dji_df.sort_index(ascending=False)
+    sp500_df = sp500_df.sort_index(ascending=False)
+    nasdaq_df = nasdaq_df.sort_index(ascending=False)
 
-        # change date format into string
-        dji_df['Date'] = change_date_format(dji_df)
-        sp500_df['Date'] = change_date_format(sp500_df)
-        nasdaq_df['Date'] = change_date_format(nasdaq_df)
+    # change date format into string
+    dji_df['Date'] = change_date_format(dji_df)
+    sp500_df['Date'] = change_date_format(sp500_df)
+    nasdaq_df['Date'] = change_date_format(nasdaq_df)
 
-        # command to insert data into mysql server
-        dji_command = "INSERT INTO ml_website_database.dow_jones_industrial VALUES (%s, %s, %s, %s, %s, %s, %s)"
-        sp500_command = "INSERT INTO ml_website_database.sp500 VALUES (%s, %s, %s, %s, %s, %s, %s)"
-        nasdaq_command = "INSERT INTO ml_website_database.nasdaq VALUES (%s, %s, %s, %s, %s, %s, %s)"
+    # command to insert data into mysql server
+    dji_command = "INSERT INTO ml_website_database.dow_jones_industrial VALUES (%s, %s, %s, %s, %s, %s, %s)"
+    sp500_command = "INSERT INTO ml_website_database.sp500 VALUES (%s, %s, %s, %s, %s, %s, %s)"
+    nasdaq_command = "INSERT INTO ml_website_database.nasdaq VALUES (%s, %s, %s, %s, %s, %s, %s)"
 
-        # insert data into mysql server
-        insert_data(dji_df, dji_command)
-        insert_data(sp500_df, sp500_command)
-        insert_data(nasdaq_df, nasdaq_command)
-    else:
-        pass
+    # insert data into mysql server
+    insert_data(dji_df, dji_command)
+    insert_data(sp500_df, sp500_command)
+    insert_data(nasdaq_df, nasdaq_command)
 
 
 def change_date_format(df):

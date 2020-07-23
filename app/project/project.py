@@ -13,8 +13,6 @@ project_bp = Blueprint(
 
 @project_bp.route('/project/time_forecast')
 def time_forecast():
-    # insert into database
-    process()
 
     # get predicted data
     dji_predict_json, sp500_predict_json, nasdaq_predict_json = predict_next_prices()
