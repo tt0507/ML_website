@@ -2,18 +2,13 @@ import googleapiclient.discovery
 import json
 import os
 import numpy as np
+import psycopg2
 from dotenv import load_dotenv
-from sqlalchemy import create_engine
 from sklearn.preprocessing import StandardScaler
 
 # load env variable
 load_dotenv()
-
-# Used to connect to database
-url = os.environ.get("MYSQL_URL")
-database = create_engine(url)
-mysql = database.connect()
-mysql.execute("use ml_website_database")
+url = os.environ["DATABASE_URL"]
 
 
 def predict_next_prices():
@@ -90,9 +85,16 @@ def get_data():
     :return:
     """
     # Get data from database
-    dji_data = mysql.execute("SELECT * FROM ml_website_database.dow_jones_industrial").fetchall()
-    sp500_data = mysql.execute("SELECT * FROM ml_website_database.sp500").fetchall()
-    nasdaq_data = mysql.execute("SELECT * FROM ml_website_database.nasdaq").fetchall()
+    with psycopg2.connect(url, sslmode='require') as connect:
+        with connect.cursor() as postgres:
+            postgres.execute("SELECT * FROM ml_website.dow_jones_industrial")
+            dji_data = postgres.fetchall()
+
+            postgres.execute("SELECT * FROM ml_website.sp500")
+            sp500_data = postgres.fetchall()
+
+            postgres.execute("SELECT * FROM ml_website.nasdaq")
+            nasdaq_data = postgres.fetchall()
 
     # remove the dates from the fetched data
     dji_numpy = np.array(dji_data)[:, 1:]
@@ -141,15 +143,20 @@ def unstandardized(predicted, table_name):
     :param predicted: Data to be unstandarized
     :return: Data returned as numpy array
     """
-    if table_name == 'dji':
-        adj_close = mysql.execute("SELECT adj_close FROM ml_website_database.dow_jones_industrial").fetchall()
-        adj_close = np.array(adj_close)
-    elif table_name == 'sp500':
-        adj_close = mysql.execute("SELECT adj_close FROM ml_website_database.sp500").fetchall()
-        adj_close = np.array(adj_close)
-    else:
-        adj_close = mysql.execute("SELECT adj_close FROM ml_website_database.nasdaq").fetchall()
-        adj_close = np.array(adj_close)
+    with psycopg2.connect(url, sslmode='require') as connect:
+        with connect.cursor() as postgres:
+            if table_name == 'dji':
+                postgres.execute("SELECT adj_close FROM ml_website.dow_jones_industrial")
+                dji_fetch = postgres.fetchall()
+                adj_close = np.array(dji_fetch)
+            elif table_name == 'sp500':
+                postgres.execute("SELECT adj_close FROM ml_website.sp500")
+                sp500_fetch = postgres.fetchall()
+                adj_close = np.array(sp500_fetch)
+            else:
+                postgres.execute("SELECT adj_close FROM ml_website.nasdaq")
+                nasdaq_fetch = postgres.fetchall()
+                adj_close = np.array(nasdaq_fetch)
 
     mean = adj_close.mean()
     std = adj_close.std()
@@ -167,17 +174,22 @@ def get_visualization_data():
     :return: json
     """
     # Get last 10 data from database
-    dji_visualization = mysql.execute(
-        "SELECT * FROM (SELECT * FROM ml_website_database.dow_jones_industrial ORDER BY date DESC LIMIT 10)"
-        "sub ORDER BY date").fetchall()
+    with psycopg2.connect(url, sslmode='require') as connect:
+        with connect.cursor() as postgres:
+            postgres.execute(
+                "SELECT * FROM (SELECT * FROM ml_website.dow_jones_industrial ORDER BY date DESC LIMIT 10)"
+                "sub ORDER BY date")
+            dji_visualization = postgres.fetchall()
 
-    sp500_visualization = mysql.execute(
-        "SELECT * FROM (SELECT * FROM ml_website_database.sp500 ORDER BY date DESC LIMIT 10)"
-        "sub ORDER BY date").fetchall()
+            postgres.execute(
+                "SELECT * FROM (SELECT * FROM ml_website.sp500 ORDER BY date DESC LIMIT 10)"
+                "sub ORDER BY date")
+            sp500_visualization = postgres.fetchall()
 
-    nasdaq_visualization = mysql.execute(
-        "SELECT * FROM (SELECT * FROM ml_website_database.nasdaq ORDER BY date DESC LIMIT 10)"
-        "sub ORDER BY date").fetchall()
+            postgres.execute(
+                "SELECT * FROM (SELECT * FROM ml_website.nasdaq ORDER BY date DESC LIMIT 10)"
+                "sub ORDER BY date")
+            nasdaq_visualization = postgres.fetchall()
 
     header = ("date", "open", "high", "low", "close", "adj_close", "volume")
     dji_json = jsonify_data(header, dji_visualization)
@@ -207,4 +219,4 @@ def jsonify_data(header, data):
 
 if __name__ == "__main__":
     predict_next_prices()
-    # get_visualization_data()
+    get_visualization_data()
